@@ -7,10 +7,13 @@ use std::io::Write;
 
 use std::path::{Path};
 
+
 use crate::parser::parse_sequence;
 
 #[derive(Default)]
 pub struct AppBody{
+    //native_pixels_per_point
+    pxpp:f32,
     //入力
     text_in:String,
     //複製数
@@ -32,7 +35,7 @@ pub struct AppBody{
     out_info_timer:u32,
 
     //直接ファイルに書き出すフラグ
-    direct_file:bool
+    direct_file:bool,
 }
 
 //GUIの構成を実装
@@ -63,6 +66,7 @@ impl epi::App for AppBody{
             
         ctx.set_fonts(fonts);
 
+
         //設定の復元(もしくはデフォルト)
         #[cfg(feature = "persistence")]
         if let Some(storage)=_storage{
@@ -73,6 +77,13 @@ impl epi::App for AppBody{
         self.out_fname=String::from("out.txt");
         //デフォルトでは直接書き出さない
         self.direct_file=false;
+
+        //拡大率
+        self.pxpp=if let Some(p)=_frame.info().native_pixels_per_point{
+            p
+        }else{
+            2.0
+        };
     }
 
     //終了時に呼ぶやつ
@@ -184,8 +195,8 @@ impl epi::App for AppBody{
 
         });
         
-        //サイズをでかめに
-        ctx.set_pixels_per_point(2.0);
+        //サイズを調節
+        ctx.set_pixels_per_point(self.pxpp);
         
 
     }
