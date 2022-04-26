@@ -88,11 +88,7 @@ pub fn parse_sequence(v:Vec<(String,String)>,num:u32)->Result<Vec<(String,Box<dy
                 return Err("置換の入力が不正");
             };
         
-        let caps=cap2vec(&caps);
-        if let Err(e)=caps{
-            return Err(e);
-        }
-        let caps=caps.unwrap();
+        let caps=cap2vec(&caps)?;
 
         match ptn{
             //1..とか

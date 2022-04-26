@@ -207,12 +207,7 @@ impl AppBody{
     //出力をファイルに書き出す
     fn to_file(&mut self)->Result<(),&str>{
         //書き込み用ファイルの作成
-        let file=wfile_open(&self.out_fname);
-
-        if let Err(e) = file {
-            return Err(e);
-        }
-        let mut file=file.unwrap();
+        let mut file=wfile_open(&self.out_fname)?;
 
         //出力をファイルに書き出し
         let r=str_to_file(&mut file,&self.text_out);
@@ -235,13 +230,7 @@ impl AppBody{
 
         self.text_out.clear();
 
-        let rep_list=parse_sequence(self.rep.to_vec(), num);
-
-        if let Err(e)=rep_list{
-            return Err(e);
-        }
-
-        let rep_list=rep_list.unwrap();
+        let rep_list=parse_sequence(self.rep.to_vec(), num)?;
 
         for i in 0..num{
             let mut s=String::from(&self.text_in);
@@ -256,12 +245,7 @@ impl AppBody{
     //ファイルに直接出力
     fn txt_proc_direct(&mut self)->Result<(),&str>{
         //書き込み用ファイルの作成
-        let file=wfile_open(&self.out_fname);
-
-        if let Err(e) = file {
-            return Err(e);
-        }
-        let mut file=file.unwrap();
+        let mut file=wfile_open(&self.out_fname)?;
         
         //複製数を取得
         let num=self.num.parse::<u32>();
@@ -270,12 +254,8 @@ impl AppBody{
         }
         let num=num.unwrap();
 
-        let rep_list=parse_sequence(self.rep.to_vec(), num);
-        if let Err(e)=rep_list{
-            return Err(e);
-        }
+        let rep_list=parse_sequence(self.rep.to_vec(), num)?;
 
-        let rep_list=rep_list.unwrap();
         for i in 0..num{
             let mut s=String::from(&self.text_in);
             for j in &rep_list {
